@@ -1,5 +1,5 @@
 // ===== PASSWORD PROTECTION & AUTH SYSTEM =====
-const SECRET_KEY = 'YouStudentHub2026'; // Chiave per criptazione - CAMBIA QUESTO!
+const SECRET_KEY = 'Coppola90'; // Chiave per criptazione - CAMBIA QUESTO!
 const PASSWORD_HASH_KEY = 'ysh_pwd_hash';
 const PROGRESS_DATA_KEY = 'ysh_progress_data';
 const SESSION_KEY = 'ysh_session';
