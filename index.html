@@ -5,188 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Student Hub — Project Plan v2</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #080C18;
-    --bg2: #0D1224;
-    --bg3: #131929;
-    --border: rgba(255,255,255,0.07);
-    --gold: #F4C553;
-    --gold-dim: rgba(244,197,83,0.15);
-    --teal: #3DD6C8;
-    --rose: #FF6B7A;
-    --purple: #9B7CF4;
-    --blue: #4A9EFF;
-    --green: #52D48A;
-    --orange: #FF9F4A;
-    --cyan: #4AC8FF;
-    --text: #E8EAF0;
-    --muted: #6B738A;
-    --accent-border: rgba(244,197,83,0.3);
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    line-height: 1.7;
-    min-height: 100vh;
-  }
-  body::before {
-    content:'';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.4;
-  }
-  .wrapper { position: relative; z-index: 1; max-width: 980px; margin: 0 auto; padding: 60px 24px 120px; }
-
-  .header { margin-bottom: 56px; border-left: 3px solid var(--gold); padding-left: 24px; }
-  .header-tag { font-size: 11px; letter-spacing: 0.2em; color: var(--gold); text-transform: uppercase; margin-bottom: 10px; }
-  .header h1 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(30px, 5vw, 50px); line-height: 1.1; color: #fff; margin-bottom: 8px; }
-  .header h1 span { color: var(--gold); }
-  .header-sub { color: var(--muted); font-size: 12px; margin-top: 14px; }
-  .rainbow-bar { height: 2px; width: 100%; margin-top: 16px; background: linear-gradient(90deg, #9B7CF4,#3DD6C8,#FF6B7A,#4A9EFF,#52D48A,#FF9F4A,#4AC8FF,#F4C553,#9B7CF4); }
-
-  /* STACK BADGES */
-  .stack-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 48px; }
-  .stack-pill {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 5px 12px; border-radius: 2px; font-size: 10px;
-    letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500;
-    border: 1px solid;
-  }
-  .sp-red    { background: rgba(255,107,122,0.08); color: #FF6B7A; border-color: rgba(255,107,122,0.2); }
-  .sp-blue   { background: rgba(74,158,255,0.08); color: #4A9EFF; border-color: rgba(74,158,255,0.2); }
-  .sp-teal   { background: rgba(61,214,200,0.08); color: #3DD6C8; border-color: rgba(61,214,200,0.2); }
-  .sp-purple { background: rgba(155,124,244,0.08); color: #9B7CF4; border-color: rgba(155,124,244,0.2); }
-  .sp-green  { background: rgba(82,212,138,0.08); color: #52D48A; border-color: rgba(82,212,138,0.2); }
-  .sp-orange { background: rgba(255,159,74,0.08); color: #FF9F4A; border-color: rgba(255,159,74,0.2); }
-  .sp-cyan   { background: rgba(74,200,255,0.08); color: #4AC8FF; border-color: rgba(74,200,255,0.2); }
-  .sp-gold   { background: rgba(244,197,83,0.08); color: #F4C553; border-color: rgba(244,197,83,0.2); }
-
-  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 48px; overflow: hidden; }
-  .stat { background: var(--bg2); padding: 18px 16px; }
-  .stat-label { font-size: 10px; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 6px; }
-  .stat-value { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700; color: var(--gold); }
-  .stat-unit { font-size: 11px; color: var(--muted); }
-
-  /* NOTE BOX */
-  .note-box { padding: 14px 18px; background: rgba(255,159,74,0.06); border: 1px solid rgba(255,159,74,0.2); border-radius: 4px; margin-bottom: 40px; font-size: 12px; color: #B0B8C8; line-height: 1.8; }
-  .note-box strong { color: var(--orange); }
-
-  .legend { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 36px; padding: 14px 18px; background: var(--bg2); border: 1px solid var(--border); border-radius: 4px; align-items: center; }
-  .legend-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-right: 4px; }
-  .badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 2px; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500; }
-  .badge-dot { width: 5px; height: 5px; border-radius: 50%; }
-  .badge.theory  { background: rgba(155,124,244,0.12); color: var(--purple); }
-  .badge.theory .badge-dot  { background: var(--purple); }
-  .badge.build   { background: rgba(61,214,200,0.1);  color: var(--teal); }
-  .badge.build .badge-dot   { background: var(--teal); }
-  .badge.devops  { background: rgba(74,158,255,0.1);  color: var(--blue); }
-  .badge.devops .badge-dot  { background: var(--blue); }
-  .badge.milestone { background: rgba(244,197,83,0.12); color: var(--gold); }
-  .badge.milestone .badge-dot { background: var(--gold); }
-
-  /* PHASE */
-  .phase { margin-bottom: 4px; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; transition: border-color 0.2s; }
-  .phase:hover { border-color: rgba(255,255,255,0.13); }
-  .phase.open { border-color: var(--accent-border); }
-  .phase-header { display: grid; grid-template-columns: 56px 1fr auto; align-items: center; gap: 16px; padding: 16px 20px; cursor: pointer; background: var(--bg2); user-select: none; transition: background 0.15s; }
-  .phase-header:hover { background: var(--bg3); }
-  .phase.open .phase-header { background: var(--bg3); }
-  .phase-num { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; color: var(--border); line-height: 1; }
-  .phase-name { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 3px; }
-  .phase-meta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-  .phase-days { font-size: 11px; color: var(--muted); }
-  .phase-color-bar { height: 3px; border-radius: 2px; width: 100%; margin-top: 8px; }
-  .phase-toggle { font-size: 18px; color: var(--muted); transition: transform 0.2s, color 0.2s; padding: 4px; }
-  .phase.open .phase-toggle { transform: rotate(180deg); color: var(--gold); }
-  .phase-body { display: none; border-top: 1px solid var(--border); }
-  .phase.open .phase-body { display: block; }
-
-  /* CONCEPT BOX */
-  .concept-box { padding: 18px 22px; background: var(--bg); border-bottom: 1px solid var(--border); }
-  .concept-title { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
-  .concept-text { color: #9BA3BA; font-size: 12px; line-height: 1.9; }
-  .concept-text strong { color: var(--text); }
-
-  /* DAYS */
-  .day-row { display: grid; grid-template-columns: 80px 1fr; border-bottom: 1px solid var(--border); transition: background 0.1s; }
-  .day-row:last-child { border-bottom: none; }
-  .day-row:hover { background: rgba(255,255,255,0.02); }
-  .day-num-col { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 14px 8px; border-right: 1px solid var(--border); gap: 5px; }
-  .day-label { font-size: 9px; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; }
-  .day-number { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; color: var(--muted); line-height: 1; }
-  .day-row.milestone-day .day-number { color: var(--gold); }
-  .day-type-dot { width: 7px; height: 7px; border-radius: 50%; margin-top: 4px; }
-  .day-content-col { padding: 13px 20px; }
-  .day-title { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 6px; }
-  .day-tasks { list-style: none; color: #8A93A8; font-size: 11.5px; }
-  .day-tasks li { padding: 2px 0; display: flex; gap: 8px; align-items: flex-start; }
-  .day-tasks li::before { content: '→'; color: var(--muted); flex-shrink: 0; margin-top: 1px; }
-  .day-tasks li strong { color: var(--text); }
-  .tip-box { margin-top: 10px; padding: 8px 12px; background: rgba(244,197,83,0.05); border-left: 2px solid var(--gold); font-size: 11px; color: #9BA3BA; }
-  .tip-box strong { color: var(--gold); }
-  .warn-box { margin-top: 10px; padding: 8px 12px; background: rgba(255,107,122,0.05); border-left: 2px solid var(--rose); font-size: 11px; color: #9BA3BA; }
-  .warn-box strong { color: var(--rose); }
-  .milestone-banner { background: rgba(244,197,83,0.06); border: 1px solid rgba(244,197,83,0.2); border-radius: 3px; padding: 10px 14px; margin-top: 10px; font-size: 11px; color: var(--gold); display: flex; align-items: center; gap: 8px; }
-
-  /* PHASE COLORS */
-  .ph0 .phase-color-bar { background: var(--purple); }
-  .ph0 .phase.open { border-color: rgba(155,124,244,0.35); }
-  .ph0 .phase.open .phase-num { color: var(--purple); }
-
-  .ph1 .phase-color-bar { background: var(--teal); }
-  .ph1 .phase.open { border-color: rgba(61,214,200,0.35); }
-  .ph1 .phase.open .phase-num { color: var(--teal); }
-
-  .ph2 .phase-color-bar { background: var(--rose); }
-  .ph2 .phase.open { border-color: rgba(255,107,122,0.35); }
-  .ph2 .phase.open .phase-num { color: var(--rose); }
-
-  .ph3 .phase-color-bar { background: var(--blue); }
-  .ph3 .phase.open { border-color: rgba(74,158,255,0.35); }
-  .ph3 .phase.open .phase-num { color: var(--blue); }
-
-  .ph4 .phase-color-bar { background: var(--green); }
-  .ph4 .phase.open { border-color: rgba(82,212,138,0.35); }
-  .ph4 .phase.open .phase-num { color: var(--green); }
-
-  .ph5 .phase-color-bar { background: var(--orange); }
-  .ph5 .phase.open { border-color: rgba(255,159,74,0.35); }
-  .ph5 .phase.open .phase-num { color: var(--orange); }
-
-  .ph6 .phase-color-bar { background: var(--cyan); }
-  .ph6 .phase.open { border-color: rgba(74,200,255,0.35); }
-  .ph6 .phase.open .phase-num { color: var(--cyan); }
-
-  .ph7 .phase-color-bar { background: var(--gold); }
-  .ph7 .phase.open { border-color: rgba(244,197,83,0.35); }
-  .ph7 .phase.open .phase-num { color: var(--gold); }
-
-  .ph8 .phase-color-bar { background: linear-gradient(90deg,#4A9EFF,#52D48A); }
-  .ph8 .phase.open { border-color: rgba(74,158,255,0.35); }
-  .ph8 .phase.open .phase-num { color: var(--blue); }
-
-  .ph9 .phase-color-bar { background: linear-gradient(90deg,var(--purple),var(--gold)); }
-  .ph9 .phase.open { border-color: rgba(244,197,83,0.35); }
-  .ph9 .phase.open .phase-num { color: var(--gold); }
-
-  code { background: rgba(255,255,255,0.06); padding: 1px 5px; border-radius: 2px; font-size: 10.5px; color: #B8C0D8; }
-
-  .footer { margin-top: 80px; padding-top: 28px; border-top: 1px solid var(--border); color: var(--muted); font-size: 11px; }
-
-  @media(max-width:600px) {
-    .day-row { grid-template-columns: 60px 1fr; }
-    .stats { grid-template-columns: 1fr 1fr; }
-    .phase-header { grid-template-columns: 36px 1fr auto; gap: 10px; }
-    .phase-num { font-size: 18px; }
-  }
-</style>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <div class="wrapper">
@@ -196,6 +15,24 @@
     <h1>YouStudent <span>Hub</span></h1>
     <div class="header-sub">Angular · NestJS · PostgreSQL · MongoDB · Redis · Braintree/PayPal · AWS · Docker (tardivo) · CI/CD GitLab</div>
     <div class="rainbow-bar"></div>
+  </div>
+
+  <!-- PROGRESS TRACKING BOX -->
+  <div class="progress-box">
+    <div class="progress-header">
+      <div class="progress-title">📊 Project Progress</div>
+      <div class="progress-percentage"><span id="totalPercentage">0</span>%</div>
+    </div>
+    <div class="progress-bar-container">
+      <div class="progress-bar-fill" id="totalProgressBar"></div>
+    </div>
+    <div class="phase-progress-list" id="phaseProgressList"></div>
+    <div style="text-align: center; margin-top: 16px;">
+      <button id="logoutBtn" style="padding: 8px 16px; background: var(--rose); border: none; border-radius: 3px; color: white; cursor: pointer; font-size: 12px; font-weight: 600;">🔒 Logout</button>
+      <button id="exportBtn" style="padding: 8px 16px; background: var(--orange); border: none; border-radius: 3px; color: white; cursor: pointer; font-size: 12px; font-weight: 600; margin-left: 8px;">💾 Export</button>
+      <button id="importBtn" style="padding: 8px 16px; background: var(--blue); border: none; border-radius: 3px; color: white; cursor: pointer; font-size: 12px; font-weight: 600; margin-left: 8px;">📂 Import</button>
+      <input type="file" id="importFile" accept=".json" style="display: none;">
+    </div>
   </div>
 
   <div class="stack-row">
@@ -1286,10 +1123,301 @@
 </div>
 
 <script>
-  function toggle(id) {
-    document.getElementById(id).classList.toggle('open');
+// ===== PASSWORD PROTECTION & AUTH SYSTEM =====
+const SECRET_KEY = 'YouStudentHub2026'; // Chiave per criptazione - CAMBIA QUESTO!
+const PASSWORD_HASH_KEY = 'ysh_pwd_hash';
+const PROGRESS_DATA_KEY = 'ysh_progress_data';
+const SESSION_KEY = 'ysh_session';
+
+// Funzione di hash semplice (usa SubtleCrypto se disponibile)
+async function hashPassword(password) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Criptazione XOR semplice per i dati di progresso
+function encryptData(data, key) {
+  const json = JSON.stringify(data);
+  let encrypted = '';
+  for (let i = 0; i < json.length; i++) {
+    encrypted += String.fromCharCode(json.charCodeAt(i) ^ key.charCodeAt(i % key.length));
   }
-  document.getElementById('ph0').classList.add('open');
+  return btoa(encrypted);
+}
+
+function decryptData(encrypted, key) {
+  try {
+    const json = atob(encrypted);
+    let decrypted = '';
+    for (let i = 0; i < json.length; i++) {
+      decrypted += String.fromCharCode(json.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+    }
+    return JSON.parse(decrypted);
+  } catch (e) {
+    return null;
+  }
+}
+
+// Init auth modal
+function showAuthModal() {
+  const modal = document.createElement('div');
+  modal.className = 'auth-modal';
+  modal.innerHTML = `
+    <div class="auth-modal-content">
+      <div class="auth-modal-title">🔐 YouStudent Hub</div>
+      <p style="color: var(--muted); font-size: 12px; margin-bottom: 20px; text-align: center;">Primo accesso? Imposta una password</p>
+      <div id="authError" class="auth-modal-error"></div>
+      <input type="password" id="passwordInput" class="auth-modal-input" placeholder="Password" />
+      <button id="authSubmitBtn" class="auth-modal-button">Accedi</button>
+    </div>
+  `;
+  document.body.appendChild(modal);
+
+  document.getElementById('authSubmitBtn').addEventListener('click', async () => {
+    const password = document.getElementById('passwordInput').value;
+    if (!password) {
+      document.getElementById('authError').textContent = 'Inserisci una password';
+      return;
+    }
+
+    const hash = await hashPassword(password);
+    const stored = localStorage.getItem(PASSWORD_HASH_KEY);
+
+    if (!stored) {
+      // Primo accesso - salva la password
+      localStorage.setItem(PASSWORD_HASH_KEY, hash);
+      localStorage.setItem(SESSION_KEY, Date.now().toString());
+      modal.remove();
+      init();
+    } else if (stored === hash) {
+      // Password corretta
+      localStorage.setItem(SESSION_KEY, Date.now().toString());
+      modal.remove();
+      init();
+    } else {
+      // Password errata
+      document.getElementById('authError').textContent = '❌ Password errata';
+      document.getElementById('passwordInput').value = '';
+    }
+  });
+
+  document.getElementById('passwordInput').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') document.getElementById('authSubmitBtn').click();
+  });
+}
+
+// Check if authenticated
+function isAuthenticated() {
+  const session = localStorage.getItem(SESSION_KEY);
+  return session !== null;
+}
+
+// Logout
+function logout() {
+  localStorage.removeItem(SESSION_KEY);
+  location.reload();
+}
+
+// Export progress
+function exportData() {
+  const data = localStorage.getItem(PROGRESS_DATA_KEY);
+  const progressData = data ? decryptData(data, SECRET_KEY) : {};
+  const json = JSON.stringify(progressData, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `ysh-progress-${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// Import progress
+function setupImport() {
+  const importBtn = document.getElementById('importBtn');
+  const importFile = document.getElementById('importFile');
+
+  importBtn.addEventListener('click', () => {
+    importFile.click();
+  });
+
+  importFile.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const importedData = JSON.parse(event.target.result);
+        const encrypted = encryptData(importedData, SECRET_KEY);
+        localStorage.setItem(PROGRESS_DATA_KEY, encrypted);
+        alert('✅ Dati importati con successo! Ricarica la pagina.');
+        location.reload();
+      } catch (error) {
+        alert('❌ Errore nell\'importazione del file');
+      }
+    };
+    reader.readAsText(file);
+  });
+}
+
+// Load and save progress
+function loadProgress() {
+  const data = localStorage.getItem(PROGRESS_DATA_KEY);
+  if (data) {
+    const decrypted = decryptData(data, SECRET_KEY);
+    return decrypted || {};
+  }
+  return {};
+}
+
+function saveProgress() {
+  const progressData = {};
+  document.querySelectorAll('.phase-checkbox').forEach((checkbox) => {
+    progressData[checkbox.id] = checkbox.checked;
+  });
+  const encrypted = encryptData(progressData, SECRET_KEY);
+  localStorage.setItem(PROGRESS_DATA_KEY, encrypted);
+}
+
+// Update progress visualization
+function updateProgressBar() {
+  const phases = ['ph0', 'ph1', 'ph2', 'ph3', 'ph4', 'ph5', 'ph6', 'ph7', 'ph8', 'ph9'];
+  const progressData = loadProgress();
+  let totalCompleted = 0;
+  const phaseCompletion = {};
+
+  phases.forEach((phaseId) => {
+    const phaseCheckboxes = document.querySelectorAll(`input[id^="${phaseId}-"]`);
+    let phaseCompleted = 0;
+    phaseCheckboxes.forEach((checkbox) => {
+      if (checkbox.checked) {
+        phaseCompleted++;
+        totalCompleted++;
+      }
+    });
+    const percentage = phaseCheckboxes.length > 0 ? Math.round((phaseCompleted / phaseCheckboxes.length) * 100) : 0;
+    phaseCompletion[phaseId] = { completed: phaseCompleted, total: phaseCheckboxes.length, percentage };
+  });
+
+  const totalCheckboxes = document.querySelectorAll('.phase-checkbox').length;
+  const totalPercentage = totalCheckboxes > 0 ? Math.round((totalCompleted / totalCheckboxes) * 100) : 0;
+
+  document.getElementById('totalPercentage').textContent = totalPercentage;
+  document.getElementById('totalProgressBar').style.width = totalPercentage + '%';
+
+  // Update phase progress items
+  const phaseList = document.getElementById('phaseProgressList');
+  phaseList.innerHTML = '';
+  phases.forEach((phaseId) => {
+    const { completed, total, percentage } = phaseCompletion[phaseId];
+    const phaseNames = ['Fondamenta', 'NestJS', 'Auth', 'Angular', 'Redis', 'BullMQ', 'Pagamenti', 'AWS S3', 'Docker', 'Testing'];
+    const phaseName = phaseNames[parseInt(phaseId.replace('ph', ''))];
+    
+    const itemDiv = document.createElement('div');
+    itemDiv.className = 'phase-progress-item';
+    itemDiv.innerHTML = `
+      <div class="phase-progress-name">${phaseName}</div>
+      <div class="phase-progress-bar">
+        <div class="phase-progress-bar-fill" style="width: ${percentage}%; background: var(--${phaseId === 'ph0' ? 'purple' : phaseId === 'ph1' ? 'teal' : phaseId === 'ph2' ? 'rose' : phaseId === 'ph3' ? 'blue' : phaseId === 'ph4' ? 'green' : phaseId === 'ph5' ? 'orange' : phaseId === 'ph6' ? 'cyan' : phaseId === 'ph7' ? 'gold' : phaseId === 'ph8' ? 'blue' : 'gold'});"></div>
+      </div>
+      <div class="phase-progress-value">${completed}/${total} (${percentage}%)</div>
+    `;
+    phaseList.appendChild(itemDiv);
+  });
+
+  saveProgress();
+}
+
+// Initialize
+function init() {
+  // Add checkboxes to each day
+  document.querySelectorAll('.day-row').forEach((dayRow, index) => {
+    const phaseHeader = dayRow.closest('[class*="ph"]');
+    let phaseClass = '';
+    for (let i = 0; i < 10; i++) {
+      if (phaseHeader.classList.contains(`ph${i}`)) {
+        phaseClass = `ph${i}`;
+        break;
+      }
+    }
+
+    const dayNumber = dayRow.querySelector('.day-number')?.textContent || index;
+    const checkboxId = `${phaseClass}-day${dayNumber}`;
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.id = checkboxId;
+    checkbox.className = 'phase-checkbox';
+
+    const label = document.createElement('label');
+    label.htmlFor = checkboxId;
+    label.style.cursor = 'pointer';
+    label.textContent = ' Completato';
+    label.style.fontSize = '12px';
+    label.style.marginLeft = '8px';
+
+    const container = document.createElement('div');
+    container.className = 'phase-checkbox';
+    container.appendChild(checkbox);
+    container.appendChild(label);
+    container.style.display = 'flex';
+    container.style.alignItems = 'center';
+    container.style.gap = '6px';
+    container.style.margin = '12px 0 0 0';
+
+    dayRow.querySelector('.day-content-col')?.appendChild(container);
+
+    checkbox.addEventListener('change', updateProgressBar);
+  });
+
+  // Load saved progress
+  const progressData = loadProgress();
+  Object.keys(progressData).forEach((checkboxId) => {
+    const checkbox = document.getElementById(checkboxId);
+    if (checkbox) checkbox.checked = progressData[checkboxId];
+  });
+
+  // Setup buttons
+  document.getElementById('logoutBtn').addEventListener('click', logout);
+  document.getElementById('exportBtn').addEventListener('click', exportData);
+  setupImport();
+
+  // Initial progress update
+  updateProgressBar();
+
+  // Collapse all phases except first one
+  document.querySelectorAll('.phase').forEach((phase, index) => {
+    if (index !== 0) phase.classList.remove('open');
+  });
+}
+
+// On page load
+document.addEventListener('DOMContentLoaded', () => {
+  if (!isAuthenticated()) {
+    showAuthModal();
+  } else {
+    init();
+  }
+});
+
+// Original toggle function
+function toggle(id) {
+  const element = document.getElementById(id);
+  if (element) {
+    element.classList.toggle('open');
+  }
+}
+
+// Keep first phase open
+window.addEventListener('load', () => {
+  if (isAuthenticated()) {
+    document.getElementById('ph0')?.classList.add('open');
+  }
+});
 </script>
 </body>
 </html>
