@@ -216,10 +216,10 @@ body::before {
 .day-number { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700; color: var(--muted); line-height: 1; }
 .day-row.milestone-day .day-number { color: var(--gold); }
 .day-type-dot { width: 7px; height: 7px; border-radius: 50%; margin-top: 4px; }
-.day-content-col { padding: 13px 20px; }
+.day-content-col { padding: 13px 20px; overflow-x: hidden; min-width: 0; }
 .day-title { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 6px; }
 .day-tasks { list-style: none; color: #8A93A8; font-size: 12px; }
-.day-tasks li { padding: 2px 0; display: flex; gap: 8px; align-items: flex-start; }
+.day-tasks li { padding: 2px 0; display: flex; gap: 8px; align-items: flex-start; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word; }
 .day-tasks li::before { content: '→'; color: var(--muted); flex-shrink: 0; margin-top: 1px; }
 .day-tasks li strong { color: var(--text); }
 .tip-box { margin-top: 10px; padding: 8px 12px; background: rgba(244,197,83,0.05); border-left: 2px solid var(--gold); font-size: 12px; color: #9BA3BA; }
@@ -269,7 +269,10 @@ body::before {
 .ph9 .phase.open { border-color: rgba(244,197,83,0.35); }
 .ph9 .phase.open .phase-num { color: var(--gold); }
 
-code { background: rgba(255,255,255,0.06); padding: 1px 5px; border-radius: 2px; font-size: 11.5px; color: #B8C0D8; }
+code { background: rgba(255,255,255,0.06); padding: 1px 5px; border-radius: 2px; font-size: 11.5px; color: #B8C0D8; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word; }
+
+/* CODE STYLING (usando strong con backtick) */
+/* Removed styling for strong tags to make them plain text */
 
 .footer { margin-top: 80px; padding-top: 28px; border-top: 1px solid var(--border); color: var(--muted); font-size: 12px; }
 
