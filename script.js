@@ -476,5 +476,5 @@ document.addEventListener('DOMContentLoaded', () => {
   updateAll();
 
   // Keep first phase open
-  document.getElementById('ph0')?.classList.add('open');
+  document.getElementById('ph1')?.classList.add('open');
 });
