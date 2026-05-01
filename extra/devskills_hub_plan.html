@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevSkills Hub — Piano di Progetto</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080C18;
+    --bg2: #0D1224;
+    --bg3: #131929;
+    --border: rgba(255,255,255,0.07);
+    --gold: #F4C553;
+    --gold-dim: rgba(244,197,83,0.15);
+    --teal: #3DD6C8;
+    --rose: #FF6B7A;
+    --purple: #9B7CF4;
+    --blue: #4A9EFF;
+    --green: #52D48A;
+    --text: #E8EAF0;
+    --muted: #6B738A;
+    --accent-border: rgba(244,197,83,0.3);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content:'';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 60px 24px 120px;
+  }
+
+  /* HEADER */
+  .header {
+    margin-bottom: 64px;
+    border-left: 3px solid var(--gold);
+    padding-left: 24px;
+  }
+
+  .header-tag {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .header h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(32px, 5vw, 52px);
+    line-height: 1.1;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+
+  .header h1 span {
+    color: var(--gold);
+  }
+
+  .header-sub {
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 14px;
+  }
+
+  /* STATS BAR */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    margin-bottom: 56px;
+    overflow: hidden;
+  }
+
+  .stat {
+    background: var(--bg2);
+    padding: 20px 18px;
+  }
+
+  .stat-label { font-size: 10px; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 6px; }
+  .stat-value { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 700; color: var(--gold); }
+  .stat-unit { font-size: 11px; color: var(--muted); }
+
+  /* LEGEND */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 48px;
+    padding: 16px 20px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    align-items: center;
+  }
+
+  .legend-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-right: 4px; }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border-radius: 2px;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .badge-dot { width: 5px; height: 5px; border-radius: 50%; }
+
+  .badge.theory { background: rgba(155,124,244,0.12); color: var(--purple); }
+  .badge.theory .badge-dot { background: var(--purple); }
+  .badge.build { background: rgba(77,214,200,0.1); color: var(--teal); }
+  .badge.build .badge-dot { background: var(--teal); }
+  .badge.devops { background: rgba(74,158,255,0.1); color: var(--blue); }
+  .badge.devops .badge-dot { background: var(--blue); }
+  .badge.milestone { background: rgba(244,197,83,0.12); color: var(--gold); }
+  .badge.milestone .badge-dot { background: var(--gold); }
+
+  /* PHASE */
+  .phase {
+    margin-bottom: 4px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .phase:hover { border-color: rgba(255,255,255,0.13); }
+  .phase.open { border-color: var(--accent-border); }
+
+  .phase-header {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 20px;
+    cursor: pointer;
+    background: var(--bg2);
+    user-select: none;
+    transition: background 0.15s;
+  }
+
+  .phase-header:hover { background: var(--bg3); }
+  .phase.open .phase-header { background: var(--bg3); }
+
+  .phase-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--border);
+    line-height: 1;
+  }
+
+  .phase.open .phase-num { color: var(--gold); }
+
+  .phase-info {}
+  .phase-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 2px;
+  }
+
+  .phase-meta {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .phase-days { font-size: 11px; color: var(--muted); }
+  .phase-color-bar {
+    height: 3px;
+    border-radius: 2px;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .phase-toggle {
+    font-size: 18px;
+    color: var(--muted);
+    transition: transform 0.2s, color 0.2s;
+    padding: 4px;
+  }
+
+  .phase.open .phase-toggle { transform: rotate(180deg); color: var(--gold); }
+
+  .phase-body {
+    display: none;
+    border-top: 1px solid var(--border);
+  }
+
+  .phase.open .phase-body { display: block; }
+
+  /* CONCEPT BOX */
+  .concept-box {
+    padding: 20px 24px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .concept-title {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+
+  .concept-text {
+    color: #9BA3BA;
+    font-size: 12px;
+    line-height: 1.8;
+  }
+
+  .concept-text strong { color: var(--text); }
+
+  /* DAYS TABLE */
+  .days-list {}
+
+  .day-row {
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.1s;
+  }
+
+  .day-row:last-child { border-bottom: none; }
+  .day-row:hover { background: rgba(255,255,255,0.02); }
+
+  .day-num-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 16px 8px;
+    border-right: 1px solid var(--border);
+    gap: 6px;
+  }
+
+  .day-label {
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .day-number {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--muted);
+    line-height: 1;
+  }
+
+  .day-row.milestone-day .day-number { color: var(--gold); }
+
+  .day-type-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    margin-top: 4px;
+  }
+
+  .day-content-col {
+    padding: 14px 20px;
+  }
+
+  .day-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+
+  .day-tasks {
+    list-style: none;
+    color: #8A93A8;
+    font-size: 11.5px;
+  }
+
+  .day-tasks li {
+    padding: 2px 0;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .day-tasks li::before {
+    content: '→';
+    color: var(--muted);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .day-tasks li strong { color: var(--text); }
+
+  .tip-box {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: rgba(244,197,83,0.06);
+    border-left: 2px solid var(--gold);
+    font-size: 11px;
+    color: #9BA3BA;
+  }
+
+  .tip-box strong { color: var(--gold); }
+
+  .milestone-banner {
+    background: rgba(244,197,83,0.06);
+    border: 1px solid rgba(244,197,83,0.2);
+    border-radius: 3px;
+    padding: 10px 14px;
+    margin-top: 10px;
+    font-size: 11px;
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* COLOR ACCENTS PER PHASE */
+  .p0 .phase-color-bar { background: var(--purple); }
+  .p1 .phase-color-bar { background: var(--teal); }
+  .p2 .phase-color-bar { background: var(--rose); }
+  .p3 .phase-color-bar { background: var(--blue); }
+  .p4 .phase-color-bar { background: var(--green); }
+  .p5 .phase-color-bar { background: #FF9F4A; }
+  .p6 .phase-color-bar { background: #4AC8FF; }
+  .p7 .phase-color-bar { background: var(--gold); }
+  .p8 .phase-color-bar { background: var(--purple); }
+
+  .p0 .phase.open, .p1 .phase.open { border-color: var(--accent-border); }
+
+  .p0 .day-num-col { border-right-color: rgba(155,124,244,0.2); }
+  .p1 .day-num-col { border-right-color: rgba(61,214,200,0.2); }
+  .p2 .day-num-col { border-right-color: rgba(255,107,122,0.2); }
+  .p3 .day-num-col { border-right-color: rgba(74,158,255,0.2); }
+  .p4 .day-num-col { border-right-color: rgba(82,212,138,0.2); }
+  .p5 .day-num-col { border-right-color: rgba(255,159,74,0.2); }
+  .p6 .day-num-col { border-right-color: rgba(74,200,255,0.2); }
+  .p7 .day-num-col { border-right-color: rgba(244,197,83,0.2); }
+  .p8 .day-num-col { border-right-color: rgba(155,124,244,0.2); }
+
+  /* PHASE num colors */
+  .p0 .phase.open .phase-num { color: var(--purple); }
+  .p1 .phase.open .phase-num { color: var(--teal); }
+  .p2 .phase.open .phase-num { color: var(--rose); }
+  .p3 .phase.open .phase-num { color: var(--blue); }
+  .p4 .phase.open .phase-num { color: var(--green); }
+  .p5 .phase.open .phase-num { color: #FF9F4A; }
+  .p6 .phase.open .phase-num { color: #4AC8FF; }
+  .p7 .phase.open .phase-num { color: var(--gold); }
+  .p8 .phase.open .phase-num { color: var(--purple); }
+
+  .footer {
+    margin-top: 80px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 11px;
+  }
+
+  @media(max-width: 600px) {
+    .day-row { grid-template-columns: 56px 1fr; }
+    .stats { grid-template-columns: 1fr 1fr; }
+    .phase-header { grid-template-columns: 40px 1fr auto; }
+    .phase-num { font-size: 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <div class="header">
+    <div class="header-tag">// Portfolio Project — Piano Operativo</div>
+    <h1>DevSkills <span>Hub</span></h1>
+    <div class="header-sub">Piattaforma E-learning per Sviluppatori — 4h/giorno · ~5 mesi</div>
+    <div class="phase-color-bar" style="background: linear-gradient(90deg, #9B7CF4, #3DD6C8, #FF6B7A, #4A9EFF, #52D48A, #FF9F4A, #4AC8FF, #F4C553, #9B7CF4); height: 2px; width:100%; margin-top: 16px;"></div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Giorni totali</div><div class="stat-value">~128</div><div class="stat-unit">giorni lavorativi</div></div>
+    <div class="stat"><div class="stat-label">Ore totali</div><div class="stat-value">~512</div><div class="stat-unit">ore di sviluppo</div></div>
+    <div class="stat"><div class="stat-label">Fasi</div><div class="stat-value">9</div><div class="stat-unit">macro-aree</div></div>
+    <div class="stat"><div class="stat-label">Stack</div><div class="stat-value">12+</div><div class="stat-unit">tecnologie</div></div>
+    <div class="stat"><div class="stat-label">Deploy</div><div class="stat-value">AWS</div><div class="stat-unit">ECS + RDS + S3</div></div>
+  </div>
+
+  <div class="legend">
+    <span class="legend-label">Tipo giornata →</span>
+    <span class="badge theory"><span class="badge-dot"></span>Studio/Teoria</span>
+    <span class="badge build"><span class="badge-dot"></span>Implementazione</span>
+    <span class="badge devops"><span class="badge-dot"></span>DevOps/Infra</span>
+    <span class="badge milestone"><span class="badge-dot"></span>Milestone</span>
+  </div>
+
+  <!-- ================================ PHASE 0 ================================ -->
+  <div class="p0">
+  <div class="phase" id="phase0">
+    <div class="phase-header" onclick="toggle('phase0')">
+      <div class="phase-num">00</div>
+      <div class="phase-info">
+        <div class="phase-name">Fondamenta & Setup dell'Ecosistema</div>
+        <div class="phase-meta">
+          <span class="phase-days">Giorni 1–7 · 7 giorni</span>
+          <span class="badge theory"><span class="badge-dot"></span>Setup</span>
+        </div>
+        <div class="phase-color-bar"></div>
+      </div>
+      <div class="phase-toggle">▾</div>
+    </div>
+    <div class="phase-body">
+      <div class="concept-box">
+        <div class="concept-title">// Obiettivo della fase</div>
+        <div class="concept-text">Prima di scrivere una riga di codice di business, devi avere chiaro il <strong>disegno architetturale completo</strong> e un ambiente di sviluppo riproducibile. Qui installi tutto, capisci come i pezzi si connettono tra loro e imposti Docker per avere un ambiente identico su qualsiasi macchina.</div>
+      </div>
+      <div class="days-list">
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">1</span><span class="day-type-dot" style="background:#9B7CF4"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Architettura & Strumenti</div>
+            <ul class="day-tasks">
+              <li>Disegna su carta (o Excalidraw) l'architettura completa: React → API Django → PostgreSQL + MongoDB + Redis → S3 → Stripe</li>
+              <li>Installa: <strong>VS Code, Python 3.12, Node.js 20, Docker Desktop, Git, Postman/Insomnia</strong></li>
+              <li>Crea la struttura del monorepo: <code>devskills-hub/backend/</code>, <code>frontend/</code>, <code>infra/</code></li>
+              <li>Inizializza il repository Git e crea il primo commit con solo il README</li>
+            </ul>
+            <div class="tip-box"><strong>💡 Perché il monorepo?</strong> Tenere tutto in un unico repository Git semplifica la gestione delle versioni e la configurazione CI/CD, specialmente per un progetto personale.</div>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">2</span><span class="day-type-dot" style="background:#4A9EFF"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Docker — Teoria + Prime Mani</div>
+            <ul class="day-tasks">
+              <li><strong>Studia (1.5h):</strong> differenza tra <em>immagine</em> e <em>container</em>, comandi base <code>docker build / run / ps / logs / exec</code></li>
+              <li>Scrivi il tuo primo <code>Dockerfile</code> per il backend Python (usa <code>python:3.12-slim</code>)</li>
+              <li>Costruisci l'immagine e verifica che il container si avvii correttamente</li>
+              <li>Capire i concetti di <em>volume</em> (persistenza dati) e <em>port mapping</em></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">3</span><span class="day-type-dot" style="background:#4A9EFF"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Docker Compose — Orchestrazione Locale</div>
+            <ul class="day-tasks">
+              <li>Scrivi il <code>docker-compose.yml</code> con 4 servizi: <strong>backend</strong>, <strong>postgres</strong>, <strong>mongodb</strong>, <strong>redis</strong></li>
+              <li>Configura i volumi per PostgreSQL e MongoDB (i dati sopravvivono al riavvio del container)</li>
+              <li>Verifica che tutti i servizi si avviino con <code>docker-compose up</code> e comunichino tra loro</li>
+              <li>Usa un file <code>.env</code> per tutte le variabili sensibili (password DB, secret keys)</li>
+            </ul>
+            <div class="tip-box"><strong>💡 .env e .gitignore:</strong> aggiungi subito <code>.env</code> al <code>.gitignore</code>. Non committare mai credenziali su Git. Crea invece un <code>.env.example</code> con i nomi delle variabili ma senza valori.</div>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">4</span><span class="day-type-dot" style="background:#9B7CF4"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">PostgreSQL — Confronto con MySQL</div>
+            <ul class="day-tasks">
+              <li><strong>Studia (1h):</strong> differenze chiave PostgreSQL vs MySQL: tipi di dato avanzati (JSONB, Array, UUID nativo), conformità ACID più rigorosa, full-text search integrata, migliore supporto per query complesse</li>
+              <li>Connettiti al container PostgreSQL con <code>psql</code> o pgAdmin e prova i comandi base</li>
+              <li>Crea manualmente il database <code>devskills</code> e sperimenta con i tipi <code>UUID</code>, <code>JSONB</code>, <code>TIMESTAMPTZ</code></li>
+              <li>Ragionamento: <em>perché UUID come PK invece di INT autoincrement nei sistemi distribuiti?</em></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">5</span><span class="day-type-dot" style="background:#9B7CF4"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">MongoDB — Teoria NoSQL + Setup</div>
+            <ul class="day-tasks">
+              <li><strong>Studia (1.5h):</strong> <em>quando</em> usare NoSQL vs SQL — la regola pratica: SQL per relazioni e integrità (utenti, ordini, pagamenti), NoSQL per dati con struttura variabile o documenti gerarchici (contenuto corsi, quiz, metadata)</li>
+              <li>MongoDB: concetti di <em>collection</em> (≈ tabella), <em>document</em> (≈ riga in JSON), <em>schema flessibile</em></li>
+              <li>Connettiti al container MongoDB con MongoDB Compass e crea la collection <code>course_content</code></li>
+              <li>Inserisci manualmente un documento di esempio che rappresenta una lezione con quiz annesso</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">6</span><span class="day-type-dot" style="background:#3DD6C8"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Setup Django + Django REST Framework</div>
+            <ul class="day-tasks">
+              <li>Crea il progetto Django: <code>django-admin startproject core .</code> dentro <code>backend/</code></li>
+              <li>Installa e configura <strong>Django REST Framework</strong>, collega PostgreSQL con <code>psycopg2</code></li>
+              <li>Crea le prime app Django: <code>users</code>, <code>courses</code>, <code>enrollments</code></li>
+              <li>Verifica che <code>python manage.py migrate</code> giri correttamente dentro il container Docker</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row milestone-day">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">7</span><span class="day-type-dot" style="background:#F4C553"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Design del Database & ER Diagram</div>
+            <ul class="day-tasks">
+              <li>Disegna il diagramma ER completo con tutti i modelli e le relazioni</li>
+              <li>Modelli PostgreSQL: <code>User</code>, <code>Course</code>, <code>Lesson</code>, <code>Enrollment</code>, <code>Review</code>, <code>Certificate</code>, <code>Payment</code>, <code>Category</code></li>
+              <li>Definisci quali dati vanno in MongoDB: struttura di <code>LessonContent</code> (video_url, transcript, attachments, quiz: [{question, options, correct_answer}])</li>
+              <li>Discuti con te stesso la scelta dei tipi di dato (UUID vs BigInt, CharField vs TextField, ecc.)</li>
+            </ul>
+            <div class="milestone-banner">🎯 MILESTONE: ambiente Docker funzionante, architettura chiara, schema DB disegnato. Ora sei pronto per costruire.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- ================================ PHASE 1 ================================ -->
+  <div class="p1">
+  <div class="phase" id="phase1">
+    <div class="phase-header" onclick="toggle('phase1')">
+      <div class="phase-num">01</div>
+      <div class="phase-info">
+        <div class="phase-name">Backend Core — Modelli, API REST, Django Admin</div>
+        <div class="phase-meta">
+          <span class="phase-days">Giorni 8–25 · 18 giorni</span>
+          <span class="badge build"><span class="badge-dot"></span>Implementazione</span>
+        </div>
+        <div class="phase-color-bar"></div>
+      </div>
+      <div class="phase-toggle">▾</div>
+    </div>
+    <div class="phase-body">
+      <div class="concept-box">
+        <div class="concept-title">// Obiettivo della fase</div>
+        <div class="concept-text">Costruisci lo scheletro completo del backend: modelli Django, migrazioni, API REST per tutte le risorse principali, e un <strong>backoffice funzionante</strong> grazie al Django Admin personalizzato. Alla fine di questa fase, potrai interagire con tutte le entità del sistema via API, anche senza frontend.</div>
+      </div>
+      <div class="days-list">
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">8</span><span class="day-type-dot" style="background:#3DD6C8"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Modello User Personalizzato</div>
+            <ul class="day-tasks">
+              <li>Crea un <strong>Custom User Model</strong> che estende <code>AbstractUser</code> — aggiungi campo <code>role</code> (student/instructor/admin), <code>avatar</code>, <code>bio</code></li>
+              <li>Perché custom user subito? È molto difficile cambiarlo dopo le prime migrazioni.</li>
+              <li>Crea la prima migrazione e verifica la tabella su PostgreSQL</li>
+              <li>Registra il modello nel Django Admin con campi personalizzati visibili</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">9</span><span class="day-type-dot" style="background:#3DD6C8"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Modelli Course & Category</div>
+            <ul class="day-tasks">
+              <li>Modello <code>Category</code>: name, slug, description, icon</li>
+              <li>Modello <code>Course</code>: title, slug, description, instructor (FK→User), category (FK), price, thumbnail, status (draft/published/archived), created_at, updated_at</li>
+              <li>Modello <code>Lesson</code>: title, course (FK), order, duration_seconds, <strong>content_id</strong> (riferimento al documento MongoDB)</li>
+              <li>Migrazioni + Django Admin con list_display, list_filter, search_fields configurati</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">10</span><span class="day-type-dot" style="background:#3DD6C8"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Modelli Enrollment, Review, Certificate</div>
+            <ul class="day-tasks">
+              <li>Modello <code>Enrollment</code>: student (FK), course (FK), enrolled_at, progress_percent, completed_at</li>
+              <li>Modello <code>Review</code>: enrollment (FK), rating (1-5), comment, created_at — vincolo unique_together(student, course)</li>
+              <li>Modello <code>Certificate</code>: enrollment (OneToOne), issued_at, pdf_url</li>
+              <li>Popola il database con dati di seed usando <code>manage.py shell</code> o <code>factories</code></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">11</span><span class="day-type-dot" style="background:#3DD6C8"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Serializers DRF — La Logica di Trasformazione</div>
+            <ul class="day-tasks">
+              <li><strong>Studia (1h):</strong> cosa fa un serializer (model → JSON e JSON → model), differenza tra <code>ModelSerializer</code> e <code>Serializer</code></li>
+              <li>Crea serializer per <code>Course</code> (versione list e versione detail con lezioni annidate)</li>
+              <li>Serializer per <code>User</code> (attenzione: non esporre mai la password, anche hash)</li>
+              <li>Sperimenta con <code>SerializerMethodField</code> per aggiungere campi calcolati (es. average_rating, lessons_count)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">12</span><span class="day-type-dot" style="background:#3DD6C8"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">ViewSets & Router — API Courses</div>
+            <ul class="day-tasks">
+              <li>Crea <code>CourseViewSet</code> con <code>ModelViewSet</code> — ottieni CRUD completo in ~15 righe</li>
+              <li>Configura il <code>DefaultRouter</code> e registra il viewset</li>
+              <li>Testa gli endpoint con Postman: GET /api/courses/, POST /api/courses/, GET /api/courses/slug/, ecc.</li>
+              <li>Aggiungi paginazione (max 20 corsi per pagina) e filtri di base per category e price</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">13</span><span class="day-type-dot" style="background:#3DD6C8"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">API Lessons & MongoDB Integration</div>
+            <ul class="day-tasks">
+              <li>Installa <code>pymongo</code> e crea un servizio Python che wrappa la connessione a MongoDB</li>
+              <li>Endpoint <code>GET /api/lessons/{id}/content/</code>: recupera la riga da PostgreSQL + il documento da MongoDB e li fonde nella risposta JSON</li>
+              <li>Endpoint <code>POST /api/lessons/{id}/content/</code> (solo instructors): salva il contenuto su MongoDB e salva il <code>content_id</code> su PostgreSQL</li>
+              <li>Testa il flusso completo con Postman</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">14</span><span class="day-type-dot" style="background:#3DD6C8"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">API Enrollments & Progress Tracking</div>
+            <ul class="day-tasks">
+              <li>Endpoint <code>POST /api/courses/{slug}/enroll/</code> — crea un'enrollment se non esiste già e non è free</li>
+              <li>Endpoint <code>POST /api/enrollments/{id}/progress/</code> — aggiorna il progresso di una lezione specifica e ricalcola il progress_percent</li>
+              <li>Endpoint <code>GET /api/enrollments/my/</code> — tutti i corsi dell'utente loggato con progresso</li>
+              <li>Logica di completamento automatico: quando progress = 100%, emetti segnale Django per generare il certificato</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">15</span><span class="day-type-dot" style="background:#3DD6C8"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">API Reviews & Search</div>
+            <ul class="day-tasks">
+              <li>Endpoint CRUD per le recensioni — solo studenti iscritti possono recensire, una sola recensione per corso</li>
+              <li>Aggiungi <strong>django-filter</strong> e <strong>SearchFilter</strong> al viewset dei corsi: ricerca per titolo, categoria, istruttore</li>
+              <li>Aggiungi <strong>OrderingFilter</strong>: ordina per prezzo, rating medio, numero iscritti, data pubblicazione</li>
+              <li>Testa i query params: <code>?search=python&ordering=-rating&category=backend</code></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">16-17</span><span class="day-type-dot" style="background:#3DD6C8"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Django Admin — Backoffice Personalizzato (2 giorni)</div>
+            <ul class="day-tasks">
+              <li>Personalizza profondamente il Django Admin: inline per Lessons dentro Course, azioni bulk (pubblica/archivia corsi)</li>
+              <li>Aggiungi <strong>dashboard custom</strong> con statistiche: corsi pubblicati, iscrizioni questo mese, revenue totale</li>
+              <li>Aggiungi <code>SimpleHistoryAdmin</code> o simile per tracciare le modifiche ai modelli critici</li>
+              <li>Il Django Admin sarà il tuo <em>backoffice</em> operativo — investi tempo a renderlo funzionale e completo</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">18-19</span><span class="day-type-dot" style="background:#3DD6C8"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Error Handling & API Standardization (2 giorni)</div>
+            <ul class="day-tasks">
+              <li>Crea un exception handler custom per DRF: tutte le risposte di errore hanno la stessa struttura JSON <code>{"error": "...", "detail": "...", "code": "..."}</code></li>
+              <li>Gestisci i casi edge: corso già acquistato, lezione non appartenente al corso, recensione su corso non completato</li>
+              <li>Aggiungi <strong>throttling</strong>: max 100 req/ora per utenti anonimi, 1000 per autenticati</li>
+              <li>Scrivi la documentazione API con <strong>drf-spectacular</strong> (genera Swagger/OpenAPI automaticamente)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row milestone-day">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">20</span><span class="day-type-dot" style="background:#F4C553"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Test & Review del Backend Core</div>
+            <ul class="day-tasks">
+              <li>Scrivi i primi test con <code>pytest-django</code>: testa tutti gli endpoint con casi positivi e negativi</li>
+              <li>Usa <code>factory_boy</code> per generare dati di test senza hardcodare</li>
+              <li>Verifica la copertura di test con <code>pytest --cov</code> — obiettivo: >70% sul codice business</li>
+              <li>Review generale: tutti gli endpoint funzionano? La struttura dei serializer è coerente?</li>
+            </ul>
+            <div class="milestone-banner">🎯 MILESTONE: API REST completa e documentata. Il backend è autonomo e testabile senza frontend.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- ================================ PHASE 2 ================================ -->
+  <div class="p2">
+  <div class="phase" id="phase2">
+    <div class="phase-header" onclick="toggle('phase2')">
+      <div class="phase-num">02</div>
+      <div class="phase-info">
+        <div class="phase-name">Autenticazione & Autorizzazione — JWT, OAuth2, RBAC</div>
+        <div class="phase-meta">
+          <span class="phase-days">Giorni 21–35 · 15 giorni</span>
+          <span class="badge theory"><span class="badge-dot"></span>Studio + Build</span>
+        </div>
+        <div class="phase-color-bar"></div>
+      </div>
+      <div class="phase-toggle">▾</div>
+    </div>
+    <div class="phase-body">
+      <div class="concept-box">
+        <div class="concept-title">// Concetti chiave che imparerai</div>
+        <div class="concept-text">
+          <strong>JWT (JSON Web Token):</strong> un token firmato crittograficamente che il client conserva (localStorage o cookie HttpOnly) e invia ad ogni richiesta. Il server lo verifica senza consultare il DB — è <em>stateless</em>. Struttura: Header.Payload.Signature.<br><br>
+          <strong>OAuth2:</strong> un protocollo di <em>delegazione</em>: "permetti a Google di dire che sei chi dici di essere". Non è un'alternativa a JWT — spesso si usano insieme: OAuth2 gestisce il flusso di login sociale, JWT viene poi emesso dal tuo backend come token di sessione.<br><br>
+          <strong>RBAC (Role-Based Access Control):</strong> ogni utente ha un <em>ruolo</em>, ogni ruolo ha dei <em>permessi</em>. Nel nostro caso: <code>student</code> può leggere corsi e iscriversi; <code>instructor</code> può creare e modificare i propri corsi; <code>admin</code> può fare tutto.
+        </div>
+      </div>
+      <div class="days-list">
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">21</span><span class="day-type-dot" style="background:#9B7CF4"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">JWT — Teoria Profonda</div>
+            <ul class="day-tasks">
+              <li><strong>Studia (2h):</strong> anatomia di un JWT (header, payload, signature), come viene firmato con HMAC-SHA256 o RS256, perché non va messa informazione sensibile nel payload (è base64, non cifrato)</li>
+              <li>Differenza tra <strong>Access Token</strong> (breve durata, 15min) e <strong>Refresh Token</strong> (lunga durata, 7 giorni)</li>
+              <li>Rischi: token theft, come mitigarli (HttpOnly cookie per refresh token, HTTPS obbligatorio)</li>
+              <li>Prova a decodificare un JWT su jwt.io per capirne la struttura</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">22</span><span class="day-type-dot" style="background:#FF6B7A"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">JWT — Implementazione con SimpleJWT</div>
+            <ul class="day-tasks">
+              <li>Installa <code>djangorestframework-simplejwt</code> e configura in <code>settings.py</code></li>
+              <li>Endpoint <code>POST /api/auth/token/</code> → riceve email+password, restituisce access+refresh token</li>
+              <li>Endpoint <code>POST /api/auth/token/refresh/</code> → scambia il refresh token per un nuovo access token</li>
+              <li>Configura il refresh token come cookie HttpOnly lato server (più sicuro di localStorage)</li>
+              <li>Testa il ciclo completo: login → chiamata API protetta → scadenza → refresh → nuova chiamata</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">23</span><span class="day-type-dot" style="background:#9B7CF4"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">OAuth2 — Teoria: il Flusso Authorization Code</div>
+            <ul class="day-tasks">
+              <li><strong>Studia (2h):</strong> i 4 ruoli OAuth2 (Resource Owner, Client, Authorization Server, Resource Server), i grant types (Authorization Code, il più sicuro per web app)</li>
+              <li>Traccia il flusso passo per passo: utente clicca "Login con Google" → redirect a Google → Google chiede consenso → redirect al tuo backend con un <em>code</em> → il backend scambia il code con un access_token Google → il backend verifica l'identità → emette il proprio JWT</li>
+              <li>Registra una app su <strong>Google Cloud Console</strong> e <strong>GitHub Developer Settings</strong> per ottenere client_id e client_secret</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">24</span><span class="day-type-dot" style="background:#FF6B7A"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">OAuth2 — Implementazione Social Login</div>
+            <ul class="day-tasks">
+              <li>Installa <code>social-auth-app-django</code> o <code>dj-rest-auth</code> con allauth</li>
+              <li>Configura i backend Google e GitHub in <code>settings.py</code></li>
+              <li>Endpoint <code>POST /api/auth/google/</code>: riceve il token Google dal frontend e restituisce il JWT della tua app</li>
+              <li>Logica: se l'email non esiste → crea account automaticamente. Se esiste → collega i provider</li>
+              <li>Testa con Postman simulando il callback OAuth</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">25</span><span class="day-type-dot" style="background:#9B7CF4"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">RBAC — Design & Implementazione</div>
+            <ul class="day-tasks">
+              <li><strong>Studia (1h):</strong> differenza tra RBAC (ruoli predefiniti) e ABAC (attributi dinamici) — per il nostro progetto RBAC è sufficiente</li>
+              <li>Crea 3 ruoli: <code>student</code>, <code>instructor</code>, <code>admin</code>. Ogni ruolo mappa a un set di permessi DRF</li>
+              <li>Scrivi <strong>custom permission classes</strong> DRF: <code>IsInstructor</code>, <code>IsStudentEnrolled</code>, <code>IsOwnerOrAdmin</code></li>
+              <li>Applica le permission al viewset: solo instructor può creare corsi, solo enrolled student può vedere i contenuti</li>
+            </ul>
+            <div class="tip-box"><strong>💡 Regola d'oro del RBAC:</strong> scrivi sempre la permission in modo "positivo" — <em>chi può fare questa cosa?</em> — invece di "chi non può". Poi combina con <code>IsAuthenticated</code> come base.</div>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">26-27</span><span class="day-type-dot" style="background:#FF6B7A"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Registrazione, Email Verification & Password Reset (2 giorni)</div>
+            <ul class="day-tasks">
+              <li>Endpoint <code>POST /api/auth/register/</code>: crea utente, invia email di verifica con token univoco (UUID)</li>
+              <li>Endpoint <code>GET /api/auth/verify-email/{token}/</code>: attiva l'account</li>
+              <li>Endpoint <code>POST /api/auth/password/reset/</code> e <code>/confirm/</code>: flow completo di reset password</li>
+              <li>Per ora usa <code>console</code> email backend (stampa le email in stdout) — configurerai SMTP reale in fase DevOps</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row milestone-day">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">28</span><span class="day-type-dot" style="background:#F4C553"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Security Review & Test Auth</div>
+            <ul class="day-tasks">
+              <li>Testa tutti gli scenari: utente non autenticato su endpoint protetto, student che tenta di modificare un corso, instructor che accede ai dati di un altro instructor</li>
+              <li>Verifica CORS: configura <code>django-cors-headers</code> per permettere richieste solo dal tuo dominio frontend</li>
+              <li>Verifica che i JWT siano correttamente invalidati al logout (token blacklist)</li>
+            </ul>
+            <div class="milestone-banner">🎯 MILESTONE: sistema auth completo. JWT + OAuth2 (Google & GitHub) + RBAC a 3 livelli funzionante.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- ================================ PHASE 3 ================================ -->
+  <div class="p3">
+  <div class="phase" id="phase3">
+    <div class="phase-header" onclick="toggle('phase3')">
+      <div class="phase-num">03</div>
+      <div class="phase-info">
+        <div class="phase-name">Frontend — React, PWA, Routing, Auth Client</div>
+        <div class="phase-meta">
+          <span class="phase-days">Giorni 29–60 · 32 giorni</span>
+          <span class="badge build"><span class="badge-dot"></span>Implementazione</span>
+        </div>
+        <div class="phase-color-bar"></div>
+      </div>
+      <div class="phase-toggle">▾</div>
+    </div>
+    <div class="phase-body">
+      <div class="concept-box">
+        <div class="concept-title">// PWA — Cosa significa davvero</div>
+        <div class="concept-text">
+          Una <strong>PWA (Progressive Web App)</strong> è una web app che si comporta come un'app nativa: installabile sullo schermo del telefono, funziona (parzialmente) offline, riceve notifiche push, ha una splash screen. Si ottiene aggiungendo due cose al tuo React app: un <strong>Web App Manifest</strong> (JSON che descrive l'app: nome, icona, colori) e un <strong>Service Worker</strong> (script JS che gira in background, intercetta le richieste di rete e gestisce la cache offline). Con Vite + <code>vite-plugin-pwa</code> si configura in poche ore.
+        </div>
+      </div>
+      <div class="days-list">
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">29</span><span class="day-type-dot" style="background:#4A9EFF"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Setup React + Tooling</div>
+            <ul class="day-tasks">
+              <li>Crea il progetto con <strong>Vite</strong> (non create-react-app): <code>npm create vite@latest frontend -- --template react</code></li>
+              <li>Installa: <code>react-router-dom</code>, <code>axios</code>, <code>zustand</code> (state management leggero), <code>tailwindcss</code></li>
+              <li>Struttura delle cartelle: <code>components/</code>, <code>pages/</code>, <code>hooks/</code>, <code>services/</code>, <code>stores/</code></li>
+              <li>Configura Tailwind CSS con tema custom (colori brand, font, breakpoint)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">30</span><span class="day-type-dot" style="background:#4A9EFF"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Routing & Layout System</div>
+            <ul class="day-tasks">
+              <li>Configura React Router v6 con layout annidate: <code>PublicLayout</code> (navbar + footer), <code>DashboardLayout</code> (sidebar), <code>AuthLayout</code> (centered)</li>
+              <li>Crea le route principali: <code>/</code>, <code>/courses</code>, <code>/courses/:slug</code>, <code>/dashboard</code>, <code>/teach</code>, <code>/admin</code></li>
+              <li>Implementa <strong>Protected Routes</strong>: se non autenticato, redirect a /login; se ruolo insufficiente, redirect a /403</li>
+              <li>Aggiungi lazy loading dei componenti per pagina con <code>React.lazy</code> + <code>Suspense</code></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">31-32</span><span class="day-type-dot" style="background:#4A9EFF"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Auth Client — Store, Interceptors, Token Refresh (2 giorni)</div>
+            <ul class="day-tasks">
+              <li>Crea <code>authStore</code> con Zustand: user, accessToken, isAuthenticated, login(), logout()</li>
+              <li>Configura <strong>Axios interceptors</strong>: aggiungi automaticamente il bearer token ad ogni richiesta</li>
+              <li>Implementa il <strong>token refresh automatico</strong>: se una risposta è 401, prova a refreshare il token e reinvia la richiesta originale — trasparente per l'utente</li>
+              <li>Gestisci la persistenza: salva solo il refresh token (cookie HttpOnly, gestito dal browser), non l'access token in localStorage</li>
+            </ul>
+            <div class="tip-box"><strong>💡 Axios interceptor di refresh:</strong> è uno dei pattern più importanti da padroneggiare. Usa una coda di richieste pendenti mentre il refresh è in corso, così non hai race conditions se più richieste falliscono contemporaneamente.</div>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">33</span><span class="day-type-dot" style="background:#4A9EFF"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Pagine Auth — Login, Register, OAuth Buttons</div>
+            <ul class="day-tasks">
+              <li>Pagina di login con form email/password + validazione client-side (react-hook-form)</li>
+              <li>Bottoni "Continua con Google" e "Continua con GitHub" che avviano il flusso OAuth2</li>
+              <li>Pagina di registrazione con password strength indicator</li>
+              <li>Feedback visivi: loading state durante il login, messaggi di errore specifici per tipo di errore</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">34-36</span><span class="day-type-dot" style="background:#4A9EFF"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Homepage & Catalogo Corsi (3 giorni)</div>
+            <ul class="day-tasks">
+              <li>Homepage: hero section, corsi in evidenza, categorie, testimonial, stats (utenti, corsi, ore di contenuto)</li>
+              <li>Pagina catalogo: griglia di corsi con card, filtri laterali (categoria, livello, prezzo, rating), ricerca in tempo reale con debounce</li>
+              <li>Componente <code>CourseCard</code>: thumbnail, istruttore, rating, prezzo, badge "Bestseller" o "Nuovo"</li>
+              <li>Paginazione infinita (Intersection Observer) o tradizionale</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">37-39</span><span class="day-type-dot" style="background:#4A9EFF"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Pagina Dettaglio Corso (3 giorni)</div>
+            <ul class="day-tasks">
+              <li>Header corso: thumbnail, titolo, descrizione, rating aggregato, stats (studenti, ore, lezioni)</li>
+              <li>Accordion del curriculum: lista sezioni e lezioni, con durata e icona "bloccata" per non iscritti</li>
+              <li>Sezione istruttore, recensioni con distribuzione rating a barre</li>
+              <li>Sidebar sticky con prezzo, CTA "Acquista" o "Continua a studiare" (se già iscritto), progress bar</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">40-43</span><span class="day-type-dot" style="background:#4A9EFF"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Player Lezioni & Dashboard Studente (4 giorni)</div>
+            <ul class="day-tasks">
+              <li>Layout a due colonne: player video (sinistra larga) + sidebar navigazione lezioni (destra)</li>
+              <li>Video player con HTML5 nativo + riprendi dall'ultimo punto (salva timestamp su backend)</li>
+              <li>Componente Quiz: domande a scelta multipla, feedback immediato, blocca avanzamento se fallisce</li>
+              <li>Dashboard studente: corsi in corso con progress bar, corsi completati con link certificato, storico attività</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">44-48</span><span class="day-type-dot" style="background:#4A9EFF"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Dashboard Instructor — Creator Tools (5 giorni)</div>
+            <ul class="day-tasks">
+              <li>Pagina "I miei corsi": lista corsi con status (draft/published), CTA crea nuovo corso</li>
+              <li>Form creazione corso multi-step: info base → curriculum → prezzi → preview</li>
+              <li>Editor lezione: upload video (verso il backend che lo carica su S3), editor testo rich per le note, builder quiz drag-and-drop</li>
+              <li>Dashboard analytics instructor: iscritti nel tempo, revenue, lezione più vista, tasso completamento</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">49-52</span><span class="day-type-dot" style="background:#4A9EFF"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Admin Backoffice SPA (4 giorni)</div>
+            <ul class="day-tasks">
+              <li>Sezione Admin (route /admin, solo role=admin): sidebar con navigazione per sezioni</li>
+              <li>Gestione utenti: tabella con search, filtri per ruolo, azioni bulk (suspend, promote)</li>
+              <li>Gestione corsi: approvazione corsi in attesa, moderazione recensioni segnalate</li>
+              <li>Dashboard globale: KPI in tempo reale (revenue del mese, nuovi iscritti, corsi pubblicati)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">53-55</span><span class="day-type-dot" style="background:#4A9EFF"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">PWA Setup & Mobile Optimization (3 giorni)</div>
+            <ul class="day-tasks">
+              <li><strong>Studia (1h):</strong> Web App Manifest, Service Worker lifecycle (install, activate, fetch), strategie di cache (Cache First, Network First, Stale-While-Revalidate)</li>
+              <li>Installa e configura <code>vite-plugin-pwa</code>: manifest, icone, service worker con Workbox</li>
+              <li>Definisci strategia di cache: pagine statiche cached offline, chiamate API con network-first</li>
+              <li>Testa con Lighthouse su Chrome DevTools: punta a score PWA 100, Performance >90</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row milestone-day">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">56</span><span class="day-type-dot" style="background:#F4C553"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Integration Testing Frontend ↔ Backend</div>
+            <ul class="day-tasks">
+              <li>Flusso completo end-to-end: registrazione → verifica email → login → browse corsi → acquisto (con Stripe test mode) → accesso lezione → quiz → certificato</li>
+              <li>Testa tutti e 3 i ruoli (student, instructor, admin) con account dedicati</li>
+              <li>Testa su mobile reale: l'installazione PWA funziona? Il layout è usabile su schermo piccolo?</li>
+            </ul>
+            <div class="milestone-banner">🎯 MILESTONE: applicazione full-stack funzionante. Il prodotto è dimostrabile end-to-end.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- ================================ PHASE 4 ================================ -->
+  <div class="p4">
+  <div class="phase" id="phase4">
+    <div class="phase-header" onclick="toggle('phase4')">
+      <div class="phase-num">04</div>
+      <div class="phase-info">
+        <div class="phase-name">Redis — Caching, Rate Limiting & Sessioni</div>
+        <div class="phase-meta">
+          <span class="phase-days">Giorni 57–66 · 10 giorni</span>
+          <span class="badge build"><span class="badge-dot"></span>Implementazione</span>
+        </div>
+        <div class="phase-color-bar"></div>
+      </div>
+      <div class="phase-toggle">▾</div>
+    </div>
+    <div class="phase-body">
+      <div class="concept-box">
+        <div class="concept-title">// Perché Redis è fondamentale</div>
+        <div class="concept-text">Redis è un database <strong>in-memory</strong> estremamente veloce (sub-millisecondo). In un'app come la nostra lo usi per: <strong>caching</strong> (evita query PostgreSQL ripetute per dati che cambiano poco, come la lista dei corsi popolari), <strong>rate limiting</strong> (contare le richieste per IP/utente), <strong>sessioni</strong>, e come <strong>broker di messaggi</strong> per Celery (fase successiva).</div>
+      </div>
+      <div class="days-list">
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">57</span><span class="day-type-dot" style="background:#9B7CF4"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Redis — Concetti e Strutture Dati</div>
+            <ul class="day-tasks">
+              <li><strong>Studia (2h):</strong> le 5 strutture dati Redis: String, Hash, List, Set, Sorted Set — quando usare ognuna</li>
+              <li>Connettiti al container Redis con <code>redis-cli</code> e sperimenta i comandi: SET/GET, HSET/HGET, EXPIRE, TTL, INCR</li>
+              <li>Pattern di naming delle chiavi: <code>course:detail:{slug}</code>, <code>user:{id}:session</code>, <code>rate_limit:{ip}:{endpoint}</code></li>
+              <li>Comprendi il concetto di TTL (Time To Live): i dati scadono automaticamente dopo N secondi</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">58-59</span><span class="day-type-dot" style="background:#52D48A"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Caching Django con Redis (2 giorni)</div>
+            <ul class="day-tasks">
+              <li>Configura <code>django-redis</code> come backend di cache in Django settings</li>
+              <li>Cache il ViewSet della lista corsi: <code>@method_decorator(cache_page(60*15))</code> — cache per 15 minuti</li>
+              <li>Implementa <strong>cache invalidation</strong>: quando un instructor pubblica un corso, invalida la cache della lista</li>
+              <li>Cache granulare: i dettagli di un singolo corso (cambiano meno frequentemente della lista)</li>
+              <li>Misura il miglioramento: confronta i tempi di risposta con e senza cache usando Django Debug Toolbar</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">60-61</span><span class="day-type-dot" style="background:#52D48A"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Rate Limiting Avanzato (2 giorni)</div>
+            <ul class="day-tasks">
+              <li>Implementa rate limiting custom con Redis: algoritmo <strong>sliding window counter</strong> per endpoint sensibili</li>
+              <li>Regole differenziate: login endpoint → max 5 tentativi/minuto per IP, poi lockout 15min. API generale → 100/ora per anonimi.</li>
+              <li>Aggiungi headers di risposta: <code>X-RateLimit-Limit</code>, <code>X-RateLimit-Remaining</code>, <code>X-RateLimit-Reset</code></li>
+              <li>Testa il lockout con uno script Python che fa richieste rapide</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row milestone-day">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">62</span><span class="day-type-dot" style="background:#F4C553"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Redis Pub/Sub — Notifiche in Tempo Reale</div>
+            <ul class="day-tasks">
+              <li>Implementa un semplice sistema pub/sub: quando uno studente completa un corso, pubblica un evento su Redis</li>
+              <li>Un subscriber aggiorna i contatori globali (totale completamenti, per corso)</li>
+              <li>Questi contatori vengono letti dalla dashboard dell'admin in tempo quasi-reale senza query al DB</li>
+            </ul>
+            <div class="milestone-banner">🎯 MILESTONE: Redis integrato per caching, rate limiting e pub/sub. L'app regge carichi maggiori.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- ================================ PHASE 5 ================================ -->
+  <div class="p5">
+  <div class="phase" id="phase5">
+    <div class="phase-header" onclick="toggle('phase5')">
+      <div class="phase-num">05</div>
+      <div class="phase-info">
+        <div class="phase-name">Celery — Background Jobs, Queue, Workers</div>
+        <div class="phase-meta">
+          <span class="phase-days">Giorni 63–75 · 13 giorni</span>
+          <span class="badge build"><span class="badge-dot"></span>Implementazione</span>
+        </div>
+        <div class="phase-color-bar"></div>
+      </div>
+      <div class="phase-toggle">▾</div>
+    </div>
+    <div class="phase-body">
+      <div class="concept-box">
+        <div class="concept-title">// Perché i background jobs sono essenziali</div>
+        <div class="concept-text">Alcune operazioni non devono bloccare la risposta HTTP: inviare un'email, generare un PDF, processare un video caricato, inviare notifiche. <strong>Celery</strong> è un task queue: il tuo backend mette i task in una coda (su Redis), i <strong>worker</strong> Celery li processano in background. <strong>Celery Beat</strong> è lo scheduler: esegue task periodici (ogni ora, ogni giorno).</div>
+      </div>
+      <div class="days-list">
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">63</span><span class="day-type-dot" style="background:#9B7CF4"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Celery — Architettura & Setup</div>
+            <ul class="day-tasks">
+              <li><strong>Studia (1.5h):</strong> l'architettura Producer-Broker-Consumer. Producer (Django) → Broker (Redis) → Consumer (Celery Worker). Task, queue, retry policy, result backend.</li>
+              <li>Installa <code>celery</code> + <code>redis</code> e configura <code>celery.py</code> nel progetto Django</li>
+              <li>Aggiunge il container <code>celery_worker</code> al <code>docker-compose.yml</code> (stesso codice, comando diverso)</li>
+              <li>Scrivi il tuo primo task: <code>@shared_task def send_welcome_email(user_id): ...</code> e triggera da Django</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">64-65</span><span class="day-type-dot" style="background:#FF9F4A"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Email System con Celery (2 giorni)</div>
+            <ul class="day-tasks">
+              <li>Configura <strong>SendGrid</strong> o <strong>Mailgun</strong> (tier gratuiti sufficienti) come SMTP provider</li>
+              <li>Crea task: <code>send_enrollment_confirmation</code>, <code>send_lesson_reminder</code>, <code>send_certificate_ready</code></li>
+              <li>Template HTML per le email con <code>django-templated-email</code></li>
+              <li>Configura <strong>retry policy</strong>: se l'email fallisce, riprova 3 volte con exponential backoff (30s, 60s, 120s)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">66-68</span><span class="day-type-dot" style="background:#FF9F4A"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Generazione Certificati PDF (3 giorni)</div>
+            <ul class="day-tasks">
+              <li>Task <code>generate_certificate(enrollment_id)</code>: triggered dal segnale Django quando un corso è completato</li>
+              <li>Usa <code>WeasyPrint</code> o <code>reportlab</code> per generare un PDF con design professionale (nome studente, corso, data, QR code di verifica)</li>
+              <li>Il PDF viene salvato su AWS S3 (anticipi la fase 7, usa prima il filesystem locale) e l'URL viene salvato nel modello Certificate</li>
+              <li>QR code che punta a un endpoint pubblico di verifica: <code>GET /verify/{certificate_uuid}/</code></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">69-71</span><span class="day-type-dot" style="background:#FF9F4A"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Celery Beat — Task Periodici (3 giorni)</div>
+            <ul class="day-tasks">
+              <li>Aggiungi container <code>celery_beat</code> al docker-compose</li>
+              <li>Task giornaliero: <code>send_daily_digest</code> — ogni mattina invia agli studenti un riassunto dei corsi in corso con la prossima lezione suggerita</li>
+              <li>Task settimanale: <code>generate_instructor_report</code> — ogni lunedì invia agli instructor le statistiche della settimana</li>
+              <li>Task orario: <code>cleanup_expired_tokens</code> — rimuove i JWT in blacklist scaduti per mantenere il DB pulito</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row milestone-day">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">72</span><span class="day-type-dot" style="background:#F4C553"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Flower — Monitoring della Queue</div>
+            <ul class="day-tasks">
+              <li>Installa <strong>Flower</strong> (web UI per monitorare Celery) e aggiungilo al docker-compose</li>
+              <li>Accedi alla dashboard: vedi task in coda, in esecuzione, completati, falliti</li>
+              <li>Simula un fallimento e verifica il retry automatico</li>
+            </ul>
+            <div class="milestone-banner">🎯 MILESTONE: sistema asincrono operativo. Email, PDF, report periodici — tutto fuori dal ciclo HTTP.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- ================================ PHASE 6 ================================ -->
+  <div class="p6">
+  <div class="phase" id="phase6">
+    <div class="phase-header" onclick="toggle('phase6')">
+      <div class="phase-num">06</div>
+      <div class="phase-info">
+        <div class="phase-name">Stripe Payments — Acquisti, Abbonamenti & Webhooks</div>
+        <div class="phase-meta">
+          <span class="phase-days">Giorni 73–84 · 12 giorni</span>
+          <span class="badge build"><span class="badge-dot"></span>Implementazione</span>
+        </div>
+        <div class="phase-color-bar"></div>
+      </div>
+      <div class="phase-toggle">▾</div>
+    </div>
+    <div class="phase-body">
+      <div class="concept-box">
+        <div class="concept-title">// Il concetto chiave di Stripe</div>
+        <div class="concept-text">Non memorizzare mai i dati della carta nel tuo server. Stripe fornisce <strong>Stripe.js</strong> (lato client) che raccoglie i dati della carta direttamente e li trasforma in un <em>PaymentIntent</em>. Il tuo backend parla con Stripe via API Key per creare l'intent, il frontend lo conferma. Per sapere cosa è successo (pagamento riuscito, fallito, rimborsato), Stripe manda <strong>Webhooks</strong> al tuo server — endpoint HTTP che devi gestire e verificare con la Webhook Secret.</div>
+      </div>
+      <div class="days-list">
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">73</span><span class="day-type-dot" style="background:#9B7CF4"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Stripe — Setup & Teoria</div>
+            <ul class="day-tasks">
+              <li>Crea account Stripe (test mode, gratuito). Ottieni le API keys (publishable + secret)</li>
+              <li><strong>Studia (1.5h):</strong> PaymentIntent, PaymentMethod, Checkout Session, Customer, Webhook. Usa la dashboard Stripe per esplorare gli oggetti</li>
+              <li>Installa <code>stripe</code> Python SDK nel backend e <code>@stripe/stripe-js</code> nel frontend</li>
+              <li>Installa Stripe CLI per testare i webhook in locale</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">74-76</span><span class="day-type-dot" style="background:#4AC8FF"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Acquisto Singolo Corso (3 giorni)</div>
+            <ul class="day-tasks">
+              <li>Endpoint <code>POST /api/payments/checkout/</code>: crea una <strong>Stripe Checkout Session</strong> per il corso selezionato, restituisce l'URL di redirect</li>
+              <li>Il frontend reindirizza l'utente alla Checkout page di Stripe (già fatta da Stripe, sicura e ottimizzata)</li>
+              <li>Configura success_url e cancel_url: dopo il pagamento Stripe rimanda al tuo frontend</li>
+              <li>Gestisci il webhook <code>checkout.session.completed</code>: crea l'Enrollment, invia email di conferma via Celery</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">77-80</span><span class="day-type-dot" style="background:#4AC8FF"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Abbonamento Mensile — Subscription (4 giorni)</div>
+            <ul class="day-tasks">
+              <li>Crea su Stripe un <strong>Product</strong> "DevSkills Pro" con un <strong>Price</strong> mensile</li>
+              <li>Endpoint <code>POST /api/payments/subscribe/</code>: crea Customer Stripe se non esiste, avvia la Subscription</li>
+              <li>Gestisci i webhook: <code>invoice.paid</code> (rinnovo OK), <code>invoice.payment_failed</code> (downgrade a free), <code>customer.subscription.deleted</code> (cancellazione)</li>
+              <li>Endpoint <code>POST /api/payments/portal/</code>: genera link al Customer Portal Stripe (gestione abbonamento self-service)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row milestone-day">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">81</span><span class="day-type-dot" style="background:#F4C553"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Test Pagamenti & Sicurezza Webhook</div>
+            <ul class="day-tasks">
+              <li>Testa tutti i casi con le carte di test Stripe: pagamento riuscito, carta rifiutata, 3DS required</li>
+              <li>Verifica che il webhook sia autenticato: controlla sempre la firma con <code>stripe.Webhook.construct_event()</code></li>
+              <li>Idempotenza: i webhook possono arrivare duplicati. Salva l'event ID e ignora i duplicati</li>
+            </ul>
+            <div class="milestone-banner">🎯 MILESTONE: sistema di pagamento completo con acquisti singoli e abbonamenti.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- ================================ PHASE 7 ================================ -->
+  <div class="p7">
+  <div class="phase" id="phase7">
+    <div class="phase-header" onclick="toggle('phase7')">
+      <div class="phase-num">07</div>
+      <div class="phase-info">
+        <div class="phase-name">AWS S3 + CloudFront — Storage & CDN</div>
+        <div class="phase-meta">
+          <span class="phase-days">Giorni 82–93 · 12 giorni</span>
+          <span class="badge devops"><span class="badge-dot"></span>Cloud/Infra</span>
+        </div>
+        <div class="phase-color-bar"></div>
+      </div>
+      <div class="phase-toggle">▾</div>
+    </div>
+    <div class="phase-body">
+      <div class="concept-box">
+        <div class="concept-title">// S3 e CloudFront spiegati semplici</div>
+        <div class="concept-text">
+          <strong>AWS S3</strong> è uno storage di oggetti (file) infinitamente scalabile. Ci metti dentro video, immagini, PDF, e sono accessibili tramite URL. Non è un file system — non hai cartelle reali, hai <em>bucket</em> con <em>oggetti</em> il cui nome può contenere /.<br><br>
+          <strong>CloudFront</strong> è la CDN (Content Delivery Network) di AWS: distribuisce i tuoi file S3 da server presenti in tutto il mondo. Un utente in Giappone scarica il video dal server AWS più vicino a lui, non dal tuo bucket in us-east-1. Risultato: latenza bassa e costo ridotto (CloudFront è più economico di S3 per le richieste di download).
+        </div>
+      </div>
+      <div class="days-list">
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">82</span><span class="day-type-dot" style="background:#9B7CF4"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">AWS — Account, IAM & S3 Basics</div>
+            <ul class="day-tasks">
+              <li>Crea account AWS (tier gratuito). <strong>Non usare il root account</strong> — crea subito un utente IAM con permessi limitati</li>
+              <li><strong>Studia IAM (1h):</strong> Users, Groups, Roles, Policies. Principio del minimo privilegio.</li>
+              <li>Crea un utente IAM con policy <code>AmazonS3FullAccess</code> (solo per il bucket del progetto), genera le access keys</li>
+              <li>Crea due bucket S3: <code>devskills-media</code> (video, immagini) e <code>devskills-private</code> (certificati PDF — accesso solo tramite signed URL)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">83-84</span><span class="day-type-dot" style="background:#4AC8FF"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Django → S3 con boto3 (2 giorni)</div>
+            <ul class="day-tasks">
+              <li>Installa <code>boto3</code> e <code>django-storages</code>. Configura come default storage backend</li>
+              <li>I file caricati via Django (thumbnail corsi, avatar) vanno automaticamente su S3</li>
+              <li>Upload diretto dal frontend a S3 con <strong>Presigned URL</strong>: il backend genera un URL temporaneo firmato, il client carica il video direttamente su S3 — il file non passa per il tuo server (molto più scalabile)</li>
+              <li>Testa l'upload di un video da Postman usando il presigned URL</li>
+            </ul>
+            <div class="tip-box"><strong>💡 Presigned URL:</strong> è la tecnica corretta per upload di file grandi. Endpoint: <code>POST /api/lessons/{id}/upload-url/</code> → restituisce URL firmato S3 valido 10 minuti → il client fa PUT direttamente su S3.</div>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">85-87</span><span class="day-type-dot" style="background:#4AC8FF"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">CloudFront — CDN Setup (3 giorni)</div>
+            <ul class="day-tasks">
+              <li>Crea una distribuzione CloudFront che punta al bucket S3 pubblico</li>
+              <li>Configura <strong>OAC (Origin Access Control)</strong>: solo CloudFront può leggere da S3 direttamente, il bucket non è pubblico</li>
+              <li>Aggiorna tutti gli URL di Django: invece di <code>s3.amazonaws.com/...</code> usa <code>cdn.tuodominio.com/...</code></li>
+              <li>Configura cache behavior: video (cache lunga, 1 anno), immagini (cache media, 1 settimana), API (no cache)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row milestone-day">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">88</span><span class="day-type-dot" style="background:#F4C553"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Signed URLs per Contenuto Protetto</div>
+            <ul class="day-tasks">
+              <li>I video delle lezioni non devono essere accessibili a chi non ha acquistato il corso</li>
+              <li>Implementa CloudFront Signed URLs: il backend verifica l'iscrizione e genera un URL firmato valido 2 ore</li>
+              <li>Testa che un URL diretto S3 non funzioni, e che il signed URL scada correttamente</li>
+            </ul>
+            <div class="milestone-banner">🎯 MILESTONE: storage cloud operativo. Video, immagini e PDF su S3 + CDN globale + contenuto protetto.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- ================================ PHASE 8 ================================ -->
+  <div class="p8" style="--phase-color: var(--gold)">
+  <div class="phase" id="phase8">
+    <div class="phase-header" onclick="toggle('phase8')">
+      <div class="phase-num">08</div>
+      <div class="phase-info">
+        <div class="phase-name">DevOps — Docker Prod, CI/CD GitLab, AWS ECS & Load Balancer</div>
+        <div class="phase-meta">
+          <span class="phase-days">Giorni 89–114 · 26 giorni</span>
+          <span class="badge devops"><span class="badge-dot"></span>DevOps/Infra</span>
+        </div>
+        <div class="phase-color-bar"></div>
+      </div>
+      <div class="phase-toggle">▾</div>
+    </div>
+    <div class="phase-body">
+      <div class="concept-box">
+        <div class="concept-title">// CI/CD e Load Balancer spiegati</div>
+        <div class="concept-text">
+          <strong>CI/CD (Continuous Integration / Continuous Deployment):</strong> ogni volta che fai push su Git, una pipeline automatica esegue i test, costruisce l'immagine Docker e la deploya in produzione — senza intervento manuale. <strong>GitLab CI</strong> è gratuito per progetti pubblici/privati (2000 minuti/mese su GitLab.com) e si configura con un file <code>.gitlab-ci.yml</code>.<br><br>
+          <strong>AWS Application Load Balancer:</strong> distribuisce il traffico HTTP/HTTPS in arrivo verso più istanze della tua app (i container ECS). Gestisce SSL termination (il certificato HTTPS sta qui, non nei container), health checks (toglie dal pool le istanze non sane), e path-based routing (es. <code>/api/*</code> → backend, <code>/*</code> → frontend statico su S3).
+        </div>
+      </div>
+      <div class="days-list">
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">89-91</span><span class="day-type-dot" style="background:#F4C553"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Docker Production — Multi-stage Builds (3 giorni)</div>
+            <ul class="day-tasks">
+              <li><strong>Studia (1h):</strong> differenza tra Dockerfile di sviluppo (volumi, hot reload) e produzione (immagine ottimizzata, senza devDependencies)</li>
+              <li>Riscrivi il Dockerfile backend con <strong>multi-stage build</strong>: stage "builder" che installa dipendenze, stage finale minimale che copia solo il necessario — immagine finale più piccola del 60%</li>
+              <li>Aggiungi <strong>Nginx</strong> come reverse proxy davanti a Gunicorn (Django): gestisce file statici, compressione gzip, header di sicurezza</li>
+              <li>Testa che il docker-compose di produzione funzioni localmente prima di andare in cloud</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">92-95</span><span class="day-type-dot" style="background:#F4C553"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">GitLab CI/CD — Pipeline Completa (4 giorni)</div>
+            <ul class="day-tasks">
+              <li>Crea un progetto su GitLab.com (gratuito, include CI/CD runner condivisi)</li>
+              <li>Scrivi <code>.gitlab-ci.yml</code> con 4 stage: <code>test</code> → <code>build</code> → <code>push</code> → <code>deploy</code></li>
+              <li>Stage <code>test</code>: esegue pytest con coverage, fallisce se coverage &lt;60%</li>
+              <li>Stage <code>build</code>: costruisce l'immagine Docker</li>
+              <li>Stage <code>push</code>: carica l'immagine su <strong>AWS ECR</strong> (Elastic Container Registry) con tag del commit SHA</li>
+              <li>Stage <code>deploy</code>: aggiorna il service ECS con la nuova immagine — solo su branch <code>main</code></li>
+            </ul>
+            <div class="tip-box"><strong>💡 GitLab vs Jenkins:</strong> per un progetto personale, GitLab CI è la scelta migliore. È completamente gratuito su gitlab.com con 2000 minuti/mese (sufficienti), ha runner già pronti senza configurare server, e la sintassi YAML è intuitiva. Jenkins richiede un server dedicato da mantenere — overhead non giustificato per questo progetto.</div>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">96-100</span><span class="day-type-dot" style="background:#F4C553"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">AWS ECS — Deploy in Cloud (5 giorni)</div>
+            <ul class="day-tasks">
+              <li><strong>Studia (1.5h):</strong> ECS Fargate vs EC2 launch type. Fargate è serverless (AWS gestisce i server) — ideale per iniziare perché non devi configurare istanze EC2</li>
+              <li>Crea un <strong>ECS Cluster</strong>, una <strong>Task Definition</strong> (definisce i container e le risorse), un <strong>ECS Service</strong> (mantiene X istanze della task sempre in esecuzione)</li>
+              <li>Configura <strong>RDS PostgreSQL</strong> managed (non nel container — è più robusto, con backup automatici)</li>
+              <li>Configura <strong>ElastiCache Redis</strong> managed (stesso ragionamento)</li>
+              <li>Usa <strong>AWS Secrets Manager</strong> per le variabili d'ambiente sensibili (DB password, Stripe key): i container le leggono al boot senza che siano nel docker-compose</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">101-105</span><span class="day-type-dot" style="background:#F4C553"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Application Load Balancer & HTTPS (5 giorni)</div>
+            <ul class="day-tasks">
+              <li>Crea un <strong>ALB</strong> (Application Load Balancer) con listener su porta 80 e 443</li>
+              <li>Ottieni un certificato SSL gratuito da <strong>AWS Certificate Manager (ACM)</strong> per il tuo dominio</li>
+              <li>Configura <strong>Target Group</strong>: punta ai container ECS, configura health check su <code>/api/health/</code></li>
+              <li>Path-based routing: <code>/api/*</code> → backend ECS, <code>/*</code> → bucket S3 con il build React (frontend statico)</li>
+              <li>Redirect automatico HTTP → HTTPS a livello di ALB</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row milestone-day">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">106</span><span class="day-type-dot" style="background:#F4C553"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Auto Scaling & Monitoring</div>
+            <ul class="day-tasks">
+              <li>Configura <strong>ECS Auto Scaling</strong>: scala da 1 a 4 task quando CPU >70% per più di 3 minuti</li>
+              <li>Configura <strong>CloudWatch</strong> dashboard: CPU, Memory, request count, error rate, latenza P95/P99</li>
+              <li>Crea un <strong>CloudWatch Alarm</strong>: notifica email se error rate >5% per 5 minuti</li>
+            </ul>
+            <div class="milestone-banner">🎯 MILESTONE: applicazione in produzione su AWS con HTTPS, CDN, auto-scaling e monitoring. Pipeline CI/CD automatica.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- ================================ PHASE 9 ================================ -->
+  <div class="p0">
+  <div class="phase" id="phase9">
+    <div class="phase-header" onclick="toggle('phase9')">
+      <div class="phase-num">09</div>
+      <div class="phase-info">
+        <div class="phase-name">Testing, Security, Polish & Portfolio</div>
+        <div class="phase-meta">
+          <span class="phase-days">Giorni 107–128 · 22 giorni</span>
+          <span class="badge milestone"><span class="badge-dot"></span>Finalizzazione</span>
+        </div>
+        <div class="phase-color-bar" style="background: linear-gradient(90deg, var(--purple), var(--gold));"></div>
+      </div>
+      <div class="phase-toggle">▾</div>
+    </div>
+    <div class="phase-body">
+      <div class="concept-box">
+        <div class="concept-title">// L'ultima fase è la più importante per il portfolio</div>
+        <div class="concept-text">Il codice che funziona è il minimo. Un portfolio project convincente ha: <strong>test con buona copertura</strong>, <strong>documentazione chiara</strong>, <strong>un README che racconta le scelte architetturali</strong>, e un <strong>demo live</strong> raggiungibile da un recruiter in 10 secondi. Questa fase ti prepara per le interview.</div>
+      </div>
+      <div class="days-list">
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">107-111</span><span class="day-type-dot" style="background:#9B7CF4"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Test Suite Completa (5 giorni)</div>
+            <ul class="day-tasks">
+              <li><strong>Backend:</strong> unit test (modelli, serializer, permessi), integration test (endpoints API end-to-end), test dei task Celery in modalità eager</li>
+              <li><strong>Frontend:</strong> test component con React Testing Library, test dei custom hooks, test dell'interceptor Axios</li>
+              <li>Obiettivo copertura: >75% backend, >60% frontend</li>
+              <li>Setup <strong>GitHub Actions</strong> (o GitLab CI) che blocca il merge se i test falliscono</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">112-115</span><span class="day-type-dot" style="background:#9B7CF4"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Security Hardening (4 giorni)</div>
+            <ul class="day-tasks">
+              <li>OWASP Top 10 review: verifica protezioni contro SQL Injection (ORM Django protegge), XSS (React protegge, ma attenzione a dangerouslySetInnerHTML), CSRF (Django CSRF token)</li>
+              <li>Security headers: configura <code>django-csp</code> per Content Security Policy, aggiungi <code>X-Frame-Options</code>, <code>HSTS</code> via Nginx</li>
+              <li>Audit delle dipendenze: <code>pip audit</code> e <code>npm audit</code> — aggiorna le vulnerabilità note</li>
+              <li>Penetration testing di base con OWASP ZAP (tool gratuito): scansiona il tuo dominio di produzione</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">116-120</span><span class="day-type-dot" style="background:#9B7CF4"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Performance Optimization (5 giorni)</div>
+            <ul class="day-tasks">
+              <li>Backend: analizza le query lente con Django Debug Toolbar, aggiungi <code>select_related</code>/<code>prefetch_related</code> dove mancano, crea indici DB mancanti</li>
+              <li>Frontend: Lighthouse audit su produzione. Code splitting per route, lazy load immagini, compressione AVIF/WebP per thumbnails</li>
+              <li>Load testing con <code>locust</code> (Python): simula 100 utenti concorrenti e verifica che l'auto-scaling intervenga correttamente</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">121-124</span><span class="day-type-dot" style="background:#F4C553"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Documentazione & README (4 giorni)</div>
+            <ul class="day-tasks">
+              <li>README professionale: problema che risolve, screenshot/GIF del prodotto, tech stack con ragioni delle scelte, architettura diagram, istruzioni setup locale in 5 comandi</li>
+              <li>Sezione "Architecture Decisions": perché PostgreSQL + MongoDB (e non solo uno dei due), perché Celery (e non cron jobs), perché ECS Fargate</li>
+              <li>API documentation pubblica con Swagger/OpenAPI su <code>/api/docs/</code></li>
+              <li>Crea un account demo (credenziali nel README) con dati pre-popolati per ogni ruolo</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-row milestone-day">
+          <div class="day-num-col"><span class="day-label">giorno</span><span class="day-number">125-128</span><span class="day-type-dot" style="background:#F4C553"></span></div>
+          <div class="day-content-col">
+            <div class="day-title">Portfolio Presentation & Demo Video</div>
+            <ul class="day-tasks">
+              <li>Registra una demo video di 3-5 minuti: walkthrough del prodotto da tutti e 3 i ruoli, mostra il monitoring AWS in azione, mostra il CI/CD pipeline su GitLab</li>
+              <li>Prepara una presentazione tecnica da mostrare ai colloqui: stack scelto, sfide incontrate e come le hai risolte, cosa faresti diversamente</li>
+              <li>Pubblica su LinkedIn con una descrizione tecnica del progetto</li>
+              <li>Aggiungi al CV con link al repo e al demo live</li>
+            </ul>
+            <div class="milestone-banner">🏆 PROGETTO COMPLETATO — DevSkills Hub in produzione su AWS, con CI/CD, monitoring, test coverage e documentazione professionale.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <div class="footer">
+    <div style="margin-bottom:8px">// DevSkills Hub — Piano di Progetto · ~128 giorni · ~512 ore · 4h/giorno</div>
+    <div style="color:#4A4F65">Generato per supportare la crescita professionale come Fullstack Developer. Ogni giorno è un'unità orientativa — adatta i tempi alla tua curva di apprendimento.</div>
+  </div>
+
+</div>
+
+<script>
+  function toggle(id) {
+    const el = document.getElementById(id);
+    el.classList.toggle('open');
+  }
+  // Open phase 0 by default
+  document.getElementById('phase0').classList.add('open');
+</script>
+</body>
+</html>
